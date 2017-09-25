@@ -493,7 +493,7 @@ public class Num {
 	 * @param Num a
 	 * @param Num n
 	 * @param return product
-	 * @param throws exception
+	 * @throws exception
 	 */
 	static Num power(Num a, Num n) throws Exception {
 		if(Num.checkZero(a)){ // checking if a is zero
@@ -506,32 +506,37 @@ public class Num {
 		Num.stripNum(n);
 		Num temp = new Num(1,a.base); // Initializing temp to one
 		Num t = new Num(2,n.base); 
-		temp = Num.power(a,Num.divide(n,t)); //
-		if(Num.checkZero(Num.mod(n,t))){
+		temp = Num.power(a,Num.divide(n,t)); //dividing n by 2 recursively
+		if(Num.checkZero(Num.mod(n,t))){ // if power is even
 			Num product = Num.product(temp,temp);
 			return product;
 		}
-		else{
-			Num pro = Num.product(a,temp);
+		else{                              //if power is odd
+			Num pro = Num.product(a,temp); 
 			Num product = Num.product(temp,pro);
 			return product;
 		}
 	}
-
+	
+	/*Function to find Square root of num
+	 * @param Num a
+	 * @return result
+	 * @throws exception
+	 */
 	static Num squareRoot(Num a) throws Exception {
 		Num.stripNum(a);
 		Num result = new Num();
 		result.base = a.base;
-		Num p = new Num(1,a.base);
+		Num p = new Num(1,a.base); // setting lower limit to one
 		Num q = new Num();
-		q=a;
+		q=a; // setting upper limit to a
 
-		while(Num.compareWithoutSign(p,q)<=0){
+		while(Num.compareWithoutSign(p,q)<=0){ //Iterative binary search for x
 			Num d = Num.add(p,q);
 			Num temp = Num.divideTwo(d);
 			Num pro = Num.product(temp, temp);
 			Num proplus = Num.product(Num.add(temp,one), Num.add(temp,one));
-			if(Num.compareWithoutSign(pro,a)<=0 && Num.compareWithoutSign(proplus, a)>0){
+			if(Num.compareWithoutSign(pro,a)<=0 && Num.compareWithoutSign(proplus, a)>0){ // checking if (x*x)<a && (x+1)*(x+1)>a
 				result = temp;
 				break;
 			}
