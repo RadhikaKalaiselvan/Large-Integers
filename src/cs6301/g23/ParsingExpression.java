@@ -83,8 +83,7 @@ public class ParsingExpression {
 			}
 			
 			postFix = infixToPostfix(subExp);
-			inputList.set(i, postFix);
-			System.out.println(inputList.get(i));
+			
 			obj.setExpression(postFix);
 			if(!mapVariables.containsKey(obj.getVariable())){
 				mapVariables.put(obj.getVariable(), i);
@@ -93,11 +92,6 @@ public class ParsingExpression {
 			index++;
 			
 		}
-		for(int i=0;i<inputList.size();i++){
-			ExpressionEvaluate obj = arrayObj[i];
-			System.out.println("line number "+obj.getLineNumber()+" label "+obj.getLabel()+" variable "+obj.getVariable()+" exp "+obj.getExpression()+" value"+obj.getResult());
-		}
-		System.out.println(Collections.singletonList(mapVariables));
 	}
 	
 	public void processInput(int index) throws Exception{
@@ -110,10 +104,8 @@ public class ParsingExpression {
 			if(expression[0].equals("?")){
 				label = expression[2];
 				int line = mapVariables.get(obj.variable);
-				System.out.println("result"+arrayObj[line].result);
 				while(!Num.checkZero(arrayObj[line].result)){
 					for(ExpressionEvaluate ob:arrayObj){
-						System.out.println("label "+ob.getLabel());
 						if(label.equals(ob.getLabel())){
 							processInput(ob.getLineNumber());
 							break;
@@ -225,7 +217,6 @@ public class ParsingExpression {
 				String curr = token[j];
 
 				if(isDigit(curr)){
-					System.out.print("inside "+new Num(curr).toString());
 					stack.push(new Num(curr));
 					j++;
 				}
@@ -240,7 +231,6 @@ public class ParsingExpression {
 					object.setResult(finalResult);
 					lineNumber1 = object.getLineNumber();
 					mapVariables.put(object.variable, lineNumber1);
-					System.out.println("x = "+object.getResult().toString());
 					break;
 				}	
 				else{
@@ -298,7 +288,7 @@ public class ParsingExpression {
 			}	
 		}
 		
-		//object.getResult().printList();
+		object.getResult().printList();
 		variable.append(finalResult);
 	}
 	
