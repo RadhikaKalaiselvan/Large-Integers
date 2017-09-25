@@ -55,6 +55,12 @@ public class LP1L2 {
       
       Num test = new Num("98765432123456789012456789012646378589165127456376",567);
       System.out.println("test : " + Num.divideTwo(test));
-      System.out.println("actual : " + Num.dividetwo(p));
+   //   System.out.println("actual : " + Num.dividetwo(x));
+      
+      long b= 2;
+      System.out.println("long power test " + Num.power(Z,b));
+      
+      
+      
     }
 }
