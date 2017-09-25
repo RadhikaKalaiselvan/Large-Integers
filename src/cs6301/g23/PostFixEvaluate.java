@@ -37,10 +37,11 @@ public class PostFixEvaluate {
 		 evaluatePostfix(read);
 		 
 	}
-	public static void evaluatePostfix(List<String> read) throws Exception{
+	public static String evaluatePostfix(List<String> read) throws Exception{
 		int i;
 		Num a,b, result = null, finalResult = null;
 		Stack<Num> stack = new Stack<Num>();
+		StringBuilder variable = null; 
 		
 		for(i=0;i< read.size();i++){
 			String s = read.get(i);
@@ -50,6 +51,10 @@ public class PostFixEvaluate {
 			int j=0;
 			if(token[0].equals(";")){
 				break;
+			}
+			else if(isAlphabet(token[0])){
+				variable.append(token[0]);
+				variable.append(" ");
 			}
 			if(token[1].equals("=")){
 				j=2;
@@ -104,13 +109,13 @@ public class PostFixEvaluate {
 						finalResult = stack.peek();
 						System.out.println(finalResult.toString());
 						break;
-					}
-					
-				}
-				
+					}	
+				}	
 			}
 		}
 		finalResult.printList();
+		variable.append(finalResult);
+		return variable.toString();
 	}
 	
 	public static boolean isDigit(String s){
