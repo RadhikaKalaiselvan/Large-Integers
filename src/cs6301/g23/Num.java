@@ -401,7 +401,71 @@ compute F · m2 + K · m + G.
     /* End of Level 1 */
 
     /* Start of Level 2 */
-   
+    
+    static Num dividetwo(Num a){
+    	if(a.base == 2){
+    		Num num = new Num(a);
+    		num.numList.addLast((long) 0);
+    		num.numList.removeFirst();
+    		return num;
+    	}
+    	Num num = new Num(a);
+   // 	Num two = new Num(2,num.base);
+    	Num result = new Num();
+    	result.base = num.base;
+    //	String t = "2";
+    	long d = 2;
+    	long mod = 0;
+    	int index = num.numList.size()-1;
+    	while(index>=0){
+    		String s = num.numList.get(index).toString();
+    		int x = s.length();
+    		long D = (mod*(long) Math.pow(10,x)) + Long.parseLong(s) ;
+    		long r = D/d;
+    		mod = D%d;
+    //		System.out.println("x : " + x + " s : " + s + " D :" + D + " r :" + r + " mod : " + mod + "     " + num.numList.get(index));
+    		result.numList.addFirst(r);
+    		index--;
+    	}
+    	if(result.numList.isEmpty()){
+    		result.numList.add((long) 0);
+    	}
+    	return result;
+    }
+    
+    static Num divideTwo(Num a) throws Exception {
+    	if(a.base == 2){
+    		Num num = new Num(a);
+    		num.numList.addLast((long) 0);
+    		num.numList.removeFirst();
+    		return num;
+    	}
+    	String n = a.toString();
+    	Num num = new Num(n,10);
+   // 	Num two = new Num(2,num.base);
+    	Num result = new Num();
+    	result.base = num.base;
+    //	String t = "2";
+    	long d = 2;
+    	long mod = 0;
+    	int index = num.numList.size()-1;
+    	while(index>=0){
+    		String s = num.numList.get(index).toString();
+    		int x = s.length();
+    		long D = (mod*(long) Math.pow(10,x)) + Long.parseLong(s) ;
+    		long r = D/d;
+    		mod = D%d;
+    //		System.out.println("x : " + x + " s : " + s + " D :" + D + " r :" + r + " mod : " + mod + "     " + num.numList.get(index));
+    		result.numList.addFirst(r);
+    		index--;
+    	}
+    	if(result.numList.isEmpty()){
+    		result.numList.add((long) 0);
+    	}
+    	n = result.toString();
+    	Num res = new Num(n,a.base);
+    	return res;
+    }
     
     static Num divide(Num a, Num b) throws Exception {
     	try{
@@ -411,34 +475,49 @@ compute F · m2 + K · m + G.
     	}
     	Num.stripNum(a);
     	Num.stripNum(b);
-    	Num quotient = new Num(1);
-    	Num dividend = new Num(a);
-    	Num divisor = new Num(b);
-    	Num pro = Num.product(divisor, quotient);
-    	//System.out.println(Num.compareWithoutSign(pro,dividend));
-    	//System.out.println("flag"+dividend.numList.size());
-    	//System.out.println(pro.numList);
-    	//System.out.println(dividend.numList);
-    	while(Num.compareWithoutSign(pro,dividend)<=0){
-    		//System.out.println("flag");
-    		//System.out.println(pro + "-" + dividend + "-" + Num.compareWithoutSign(pro,dividend));
-    		quotient = add(quotient,one);
-    		pro = Num.product(divisor, quotient);
-    		//System.out.println(pro);
+    	Num result = new Num();
+    	result.base = a.base;
+    	Num p = new Num("1",a.base);
+    	Num q = new Num();
+    	Num temp = new Num();
+    	temp.base = b.base;
+    	q=a;
+    	
+    	while(Num.compareWithoutSign(p,q)<=0){
+    		Num d = Num.add(p,q);
+    	    temp = Num.divideTwo(d);
+    		Num pro = Num.product(temp, b);
+    		Num proplus = Num.product(Num.add(temp,one), b);
+    	//	System.out.println("pro : " + pro + "Proplus" + proplus);
+    		if(Num.compareWithoutSign(pro,a)<=0 && Num.compareWithoutSign(proplus, a)>0){
+    			result = temp;
+    			break;
+    		}
+    		else if(Num.compareWithoutSign(pro,a)<0){
+    			p = Num.add(temp,one);
+    		}
+    		else if(Num.compareWithoutSign(pro,a)>0){
+    			q = Num.subtract(temp,one);
+    		}
     	}
-    	//System.out.println(pro + "->" + dividend + "->" + Num.compareWithoutSign(pro,dividend));
-    	quotient = subtract(quotient,one);
-    	return quotient;
+    	if(result.numList.isEmpty()){
+    		result.numList.add((long) 0);
+    	}
+    	return result;
     }
-
+    
+    
     static Num mod(Num a, Num b) throws Exception {
     	Num.stripNum(a);
     	Num.stripNum(b);
+ //   	System.out.println("a :" +a + " b: " + b);
     	Num dividend = new Num(a);
     	Num divisor = new Num(b);
     	Num remainder = new Num();
     	Num quotient = Num.divide(dividend, divisor);
-    	Num pro = Num.product(quotient,b);
+    //	System.out.println("Quo : "+ quotient.numList + " b : "+ b.numList );
+    	Num pro = Num.product(quotient,divisor);
+   // 	System.out.println("ljj" + pro);
     	remainder = Num.subtract(a,pro);
     	return remainder;  	
     }
@@ -449,24 +528,28 @@ compute F · m2 + K · m + G.
     		return new Num(0,a.base);
     	}
     	if(Num.checkZero(n)){
-    		return new Num(1);
+    		return new Num(1,a.base);
     	}
     	Num.stripNum(a);
     	Num.stripNum(n);
-    	Num temp = new Num();
+    	Num temp = new Num(1,a.base);
+    	Num t = new Num(2,n.base);
     	//System.out.println("->"+ a.numList);
-    	//System.out.println("->"+ divide(n,two).numList);
-    	temp = power(a,divide(n,two));
-    	if(Num.checkZero(Num.mod(n,two))){
+  //  	System.out.println("->"+ divide(n,two));
+    	temp = Num.power(a,Num.divide(n,t));
+    //	System.out.println("-=>"+ n + " ]" + t);
+    	if(Num.checkZero(Num.mod(n,t))){
+   // 		System.out.println("here");
     		Num product = Num.product(temp,temp);
     	//	System.out.println("look "+ product.numList);
     		return product;
     	}
     	else{
-    		Num pro = Num.product(temp,temp);
+    //		System.out.println("hello");
+    		Num pro = Num.product(a,temp);
     //		System.out.println("pro = " + pro.numList);
     //		System.out.println("pro = " + a.numList);
-    		Num product = Num.product(a,pro);
+    		Num product = Num.product(temp,pro);
     //		System.out.println("see"+product.numList);
     		return product;
     	}
@@ -474,18 +557,29 @@ compute F · m2 + K · m + G.
 
     static Num squareRoot(Num a) throws Exception {
     	Num.stripNum(a);
-    	Num x = new Num(1);
-    	Num number = new Num(a);
-    	Num pro = Num.product(x,x);
-    	while(Num.compareWithoutSign(pro,number)<=0){
-    	//	System.out.println(pro + "-" + dividend + "-" + Num.compareWithoutSign(pro,dividend));
-    		x = add(x,one);
-    		pro = Num.product(x,x);
-    //		System.out.println(x+ " " + pro + " " + number);
+    	Num result = new Num();
+    	result.base = a.base;
+    	Num p = new Num(1,a.base);
+    	Num q = new Num();
+    	q=a;
+    	
+    	while(Num.compareWithoutSign(p,q)<=0){
+    		Num d = Num.add(p,q);
+    		Num temp = Num.divideTwo(d);
+    		Num pro = Num.product(temp, temp);
+    		Num proplus = Num.product(Num.add(temp,one), Num.add(temp,one));
+    		if(Num.compareWithoutSign(pro,a)<=0 && Num.compareWithoutSign(proplus, a)>0){
+    			result = temp;
+    			break;
+    		}
+    		else if(Num.compareWithoutSign(pro,a)<0){
+    			p = Num.add(temp,one);
+    		}
+    		else if(Num.compareWithoutSign(pro,a)>0){
+    			q = Num.subtract(temp,one);
+    		}
     	}
-    	//System.out.println(pro + "-" + dividend + "-" + Num.compareWithoutSign(pro,dividend));
-    	x = subtract(x,one);
-    	return x;
+    	return result;
     }
     /* End of Level 2 */
   
