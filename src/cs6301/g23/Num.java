@@ -362,8 +362,10 @@ public class Num {
 		Num finalResult=Num.add(k,z);
 
 		finalResult=Num.add(finalResult, G);
-
-		return finalResult;
+        if((a.isNeg && !b.isNeg) || (!a.isNeg && b.isNeg)){
+        	finalResult.isNeg=true;
+        }
+ 		return finalResult;
 	}
 
 	static Num padZeros(Num a,int n){
@@ -396,6 +398,9 @@ public class Num {
 			temp = product(power(a,(n-1)/2), power(a,(n-1)/2));
 			result = product(temp, a);
 		}
+		if(a.isNeg && n%2!=0){
+        	result.isNeg=true;
+        }
 		return result;
 	}
 	/* End of Level 1 */
@@ -429,6 +434,9 @@ public class Num {
 		}
 		n = result.toString();
 		Num res = new Num(n,a.base); // converting the num to its original base
+		if(a.isNeg){
+        	res.isNeg=true;
+        }
 		return res;
 	}
 
@@ -467,6 +475,9 @@ public class Num {
 		if(result.numList.isEmpty()){ // checking if result is empty
 			result.numList.add((long) 0); //adding zero to the list
 		}
+		if((a.isNeg && !b.isNeg) || (!a.isNeg && b.isNeg)){
+        	result.isNeg=true;
+        }
 		return result;
 	}
 
@@ -514,6 +525,9 @@ public class Num {
 		else{                              //if power is odd
 			Num pro = Num.product(a,temp); 
 			Num product = Num.product(temp,pro);
+			if(a.isNeg){
+	        	product.isNeg=true;
+	        }
 			return product;
 		}
 	}
@@ -524,6 +538,9 @@ public class Num {
 	 * @throws exception
 	 */
 	static Num squareRoot(Num a) throws Exception {
+		if(a.isNeg){
+			throw new Exception("Number is negative, unable to find square root");
+		}
 		Num.stripNum(a);
 		Num result = new Num();
 		result.base = a.base;
